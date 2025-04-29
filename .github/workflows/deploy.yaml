@@ -1,0 +1,45 @@
+name: Simple CI/CD Pipeline
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install/Build App
+        run: echo "Installing dependencies and building the app..."
+
+  test-unit:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Echo Unit Test
+        run: echo "Running unit tests..."
+
+  test-automation:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Echo Automation Test
+        run: echo "Running automation tests..."
+
+  deploy:
+    needs: [test-unit, test-automation]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Build Docker Image
+        run: echo "Building Docker Image... docker build -t image-name ."
+
+      - name: Login to DockerHub
+        run: echo "login to docker hub to push your built image"
+
+      - name: Push Docker Image
+        run: echo "Pushing Docker Image... docker push image-name"
